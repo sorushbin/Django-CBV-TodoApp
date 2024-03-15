@@ -1,0 +1,53 @@
+#list1 {
+  width: 60%;
+  margin: auto;
+  background: linear-gradient(to left, #d3cce3, #e9e4f0);
+}
+
+#list1 .form-control {
+  border-color: transparent;
+}
+#list1 .form-control:focus {
+  border-color: transparent;
+  box-shadow: none;
+}
+#list1 .select-input.form-control[readonly]:not([disabled]) {
+  background-color: #fbfbfb;
+}
+
+.form-control{
+  height: 65px !important;
+  width: 95%;
+  margin: 20px 20px;
+  align-content: center;
+}
+
+.btn-primary{
+  width: 20%;
+  align-items: left;
+  margin-left: 30px;
+}
+
+.text-primary{
+  padding: 15px 10px;
+}
+
+
+.btn-edit{
+  margin-bottom: 20px;
+}
+
+.icon-align{
+  font-size: 30px;
+  text-align: right !important;
+}
+
+.delete-page{
+  font-size: 16px;
+  margin: 20px 30px;
+}
+
+.no-task{
+  padding: 25px;
+  text-align: center;
+}

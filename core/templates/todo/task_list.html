@@ -1,0 +1,72 @@
+{% extends "base.html"%}
+{% load humanize %}
+
+{% block content %}
+    <section class="vh-100">
+        <div class="container py-5 h-100">
+          <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col">
+              <div class="card" id="list1" style="border-radius: .75rem; background-color: #eff1f2;">
+                <div class="card-body py-4 px-4 px-md-5">
+      
+                  <p class="h1 text-center mt-3 mb-4 pb-3 text-primary">
+                    <i class="fa fa-check-square me-1"></i>
+                    <u>My Todo-s</u>
+                  </p>
+      
+                  <div class="pb-2">
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="d-flex flex-row align-items-center">
+                        <form method="post" action="{% url 'todo:task-create' %}">
+                            {% csrf_token %}
+                            {{form.as_p}}
+                            <input type="text" name="title" class="form-control form-control-lg" id="exampleFormControlInput1"
+                            placeholder="Add new..." required>
+                            <button type="submit" class="btn btn-primary">Add</button>
+                          </div>
+                        </form>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+      
+                  <hr class="my-4">
+      {% if tasks %}
+      {% for task in tasks %}
+                  <ul class="list-group list-group-horizontal rounded-0 bg-transparent">
+                    <li
+                      class="list-group-item d-flex align-items-center ps-0 pe-3 py-1 rounded-0 border-0 bg-transparent">
+                      <div class="form-check">
+                          <p class="small mb-0">{{ task.created_date|naturaltime }}</p>
+                      </div>
+                    </li>
+                    <li
+                      class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
+                      {% if task.done == True %}
+                      <strike class="lead fw-normal mb-0" >{{ task.title }}</strike>
+                      {% else %}
+                      <p class="lead fw-normal mb-0">{{ task.title }}</p>
+                      {% endif %}
+                    </li>
+                    <li class="list-group-item ps-3 pe-0 py-1 rounded-0 border-0 bg-transparent">
+                      <div class="d-flex flex-row justify-content-end mb-1 icon-align">
+                        <a href="{% url 'todo:task-edit' pk=task.id %}" class="text-info" data-mdb-toggle="tooltip" title="Edit todo"><i
+                            class="fa fa-fw fa-edit me-3"></i></a>
+                        <a href="{% url 'todo:task-delete' pk=task.id %}" class="text-danger" data-mdb-toggle="tooltip" title="Delete todo"><i
+                            class="fa fa-fw fa-trash" aria-hidden="true"></i></a>
+                        <a href="{% url 'todo:task-done' pk=task.id %}" class="text-danger" data-mdb-toggle="tooltip" title="Done todo"><i
+                            class="fa fa-check" aria-hidden="true"></i></a>
+                      </div>
+                    </li>
+                  </ul>
+      {% endfor %}
+      {% else %}<p class="lead fw-normal mb-0 no-task">You have no pending task!</p>{% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+{% endblock %}
