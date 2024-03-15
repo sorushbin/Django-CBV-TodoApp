@@ -1,0 +1,32 @@
+{% extends "base.html"%}
+{% load humanize %}
+
+{% block content %}
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+                    <form method="post" action="{% url 'login' %}">
+                      {% csrf_token %}
+                      <input type="text" name="username" class="form-control form-control-lg login-control-top"
+                        placeholder="Enter your Email" required>
+                      <input type="password" name="password" class="form-control form-control-lg login-control-bottom"
+                        placeholder="Enter your Password" required>
+                      <button type="submit" class="btn btn-primary btn-login">Login</button>
+                    </form>
+                    <p class="text-login">If don't have an account, please<a href="{% url 'register' %}" class="link-login">signup</a></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr class="my-4">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

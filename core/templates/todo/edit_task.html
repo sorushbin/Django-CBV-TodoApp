@@ -1,32 +1,16 @@
 {% extends "base.html"%}
 
 {% block content %}
-<section class="vh-100">
-    <div class="container py-5 h-100">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-            <div class="col">
-                <div class="card" id="list1" style="border-radius: .75rem; background-color: #eff1f2;">
-                    <div class="card-body py-4 px-4 px-md-5">
+<form method="post" action="{% url 'todo:task-edit' pk=task.id %}">
+    {% csrf_token %}
+    {{form}}
+    <div>
+        <button type="submit" class="btn btn-primary btn-edit">Edit</button>
+    </div>
+</form>
 
-                        <p class="h1 text-center mt-3 mb-4 pb-3 text-primary">
-                            <i class="fa fa-check-square me-1"></i>
-                            <u>My Todo-s</u>
-                        </p>
-
-                        <div class="pb-2">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="d-flex flex-row align-items-center">
-                                        <form method="post" action="{% url 'todo:task-edit' pk=task.id %}">
-                                            {% csrf_token %}
-                                            {{form.as_p}}
-                                            <div>
-                                                <button type="submit" class="btn btn-primary btn-edit">Edit</button>
-                                            </div>
-                                        </form>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endblock %}
+</div>
+</div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html"%}
+{% load humanize %}
+
+{% block content %}
+
+                    <form method="post" action="{% url 'register' %}">
+                      {% csrf_token %}
+                      <input type="text" name="email" class="form-control form-control-lg login-control-top"
+                        placeholder="Enter your Email" required>
+                      <input type="password" name="password1" class="form-control form-control-lg login-control-bottom"
+                        placeholder="Enter your Password" required>
+                        <input type="password" name="password2" class="form-control form-control-lg login-control-bottom"
+                        placeholder="Confirm your Password" required>
+                      <button type="submit" class="btn btn-primary btn-login">Sign Up</button>
+                    </form>
+                    <p class="text-login">If you have an account, please<a href="{% url 'login' %}" class="link-login">Login</a></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr class="my-4">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

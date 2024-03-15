@@ -137,3 +137,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # definition auth user model
 AUTH_USER_MODEL = "accounts.User"
 
+# redirect to task-list page after user login
+LOGIN_REDIRECT_URL = 'todo:task-list'
