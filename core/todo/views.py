@@ -4,9 +4,10 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import (UpdateView, DeleteView, CreateView)
 from django.views.generic.list import ListView
 from .models import Task
+from accounts.models import Profile
 from .forms import TaskEditForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-# Create your views here.
+
 
 
 class TaskListView(LoginRequiredMixin, ListView):
@@ -15,7 +16,7 @@ class TaskListView(LoginRequiredMixin, ListView):
     template_name = 'todo/list_task.html'
 
     def get_queryset(self):
-        return self.model.objects.filter(user = self.request.user)
+        return self.model.objects.filter(user = self.request.user.id)
     
 
 class TaskCreateView(LoginRequiredMixin, CreateView):
@@ -24,7 +25,7 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('todo:task-list')
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
+        form.instance.user = Profile.objects.get(user=self.request.user)
         return super(TaskCreateView, self).form_valid(form)
     
 
