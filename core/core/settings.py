@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'rest_framework',
+    'rest_framework.authtoken',
     'django_filters',
     'drf_yasg',
     'accounts',
@@ -142,3 +143,12 @@ AUTH_USER_MODEL = "accounts.User"
 
 # redirect to task-list page after user login
 LOGIN_REDIRECT_URL = 'todo:task-list'
+
+# restframework configuration
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication', 
+    ]
+}
