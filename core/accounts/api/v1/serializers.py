@@ -19,7 +19,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         
     def validate(self, attrs):
         if attrs.get('password') != attrs.get('password1'):
-            raise serializers.ValidationError({'details' : 'password dose not match.'})
+            raise serializers.ValidationError({'details' : 'passwords dose not match.'})
         try:
             validate_password(attrs.get('password'))
         except exceptions.ValidationError as e:
@@ -79,3 +79,21 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         validated_data['email'] = self.user.email
         validated_data['user_id'] = self.user.id        
         return validated_data
+    
+
+class ChangePasswordSerializer(serializers.Serializer):
+    """ change old password and validation pass """
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+    new_password1 = serializers.CharField(required=True)
+
+    def validate(self, attrs):
+        if attrs.get('new_password') != attrs.get('new_password1'):
+            raise serializers.ValidationError({'details' : 'passwords dose not match.'})
+        try:
+            validate_password(attrs.get('new_password'))
+        except exceptions.ValidationError as e:
+            raise serializers.ValidationError({'new_password' : list(e.messages)})
+        
+        return super().validate(attrs)
+
