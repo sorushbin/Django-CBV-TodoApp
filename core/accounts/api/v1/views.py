@@ -89,5 +89,5 @@ class ProfileApiView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         queryset = self.get_queryset()
-        obj = get_object_or_404(queryset, user=self.request.user)
+        obj = get_object_or_404(queryset, user=self.request.user.id)
         return obj
