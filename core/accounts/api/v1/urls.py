@@ -8,6 +8,7 @@ urlpatterns = [
 
     # Token Based Authentication
     path('token/login/', views.CustomObtainAuthToken.as_view(), name='token-login'),
+    path('token/logout/', views.CustomDiscardAuthToken.as_view(), name='token-logout')
 
 
 ]
