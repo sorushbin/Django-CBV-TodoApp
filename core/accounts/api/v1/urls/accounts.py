@@ -10,6 +10,12 @@ urlpatterns = [
     # register
     path('registration/', views.RegistrationApiView.as_view(), name='registration'),
 
+    # activation
+    path('activation/confirm/<str:token>', views.ActivationConfirmApiView.as_view(), name='activation'),
+    
+    # resend activation token
+    path('activation/resend/', views.ActivationResendApiView.as_view(), name='activation-resend'),
+
     # change password
     path('change-password', views.ChangePasswordApiView.as_view(), name='change-password'),
     
