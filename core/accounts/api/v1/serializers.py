@@ -130,3 +130,35 @@ class ActivationResendSerializer(serializers.Serializer):
                 {'details': 'This account has already active and verified. '})
         attrs['user'] = user_obj
         return super().validate(attrs)
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
+    def validate(self, attrs):
+        email = attrs.get('email')
+        try:
+            user_obj = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise serializers.ValidationError(
+                {'details': 'user dose not exist.'})
+        attrs['user'] = user_obj
+        return super().validate(attrs)
+
+
+class ResetPasswordConfirmSerializer(serializers.Serializer):
+    """ change old password and validation pass """
+    new_password = serializers.CharField(required=True)
+    confirm_password = serializers.CharField(required=True)
+
+    def validate(self, attrs):
+        if attrs.get('new_password') != attrs.get('confirm_password'):
+            raise serializers.ValidationError(
+                {'details': 'passwords dose not match.'})
+        try:
+            validate_password(attrs.get('new_password'))
+        except exceptions.ValidationError as e:
+            raise serializers.ValidationError(
+                {'new_password': list(e.messages)})
+
+        return super().validate(attrs)

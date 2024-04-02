@@ -1,6 +1,7 @@
 from rest_framework import generics, status
 from .serializers import (RegistrationSerializer, CustomAuthTokenSerializer,
-                          CustomTokenObtainPairSerializer, ChangePasswordSerializer, ProfileSerializer, ActivationResendSerializer)
+                        CustomTokenObtainPairSerializer, ChangePasswordSerializer, ProfileSerializer,
+                        ActivationResendSerializer, ResetPasswordSerializer, ResetPasswordConfirmSerializer)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -137,7 +138,7 @@ class ActivationResendApiView(APIView):
     serializer_class = ActivationResendSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data = request.data)
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         user_obj = serializer.validated_data['user']
         token = self.get_tokens_for_user(user_obj)
@@ -149,3 +150,48 @@ class ActivationResendApiView(APIView):
     def get_tokens_for_user(self, user):
         refresh = RefreshToken.for_user(user)
         return str(refresh.access_token)
+
+
+class ResetPasswordApiView(APIView):
+    """ this is for forget password and reset its """
+    serializer_class = ResetPasswordSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user_obj = serializer.validated_data['user']
+        token = self.get_tokens_for_user(user_obj)
+        email_obj = EmailMessage(
+            'email/reset_password_email.tpl', {'token': token}, 'admin@admin.com', to=[user_obj.email])
+        EmailThread(email_obj).start()
+        return Response({'details': 'The password reset link has been sent. Please check your mail box.'}, status=status.HTTP_200_OK)
+
+    def get_tokens_for_user(self, user):
+        refresh = RefreshToken.for_user(user)
+        return str(refresh.access_token)
+
+
+class ResetPasswordConfirm(generics.GenericAPIView):
+    """ Password reset confirm view """
+    serializer_class = ResetPasswordConfirmSerializer
+    
+    def put(self, request, *args, **kwargs):
+        token = kwargs.get('token')
+        try:
+            decode_token = jwt.decode(
+                token, settings.SECRET_KEY, algorithms=['HS256'])
+            user_id = decode_token.get('user_id')
+        except ExpiredSignatureError:
+            return Response({'details': 'token has been expired.'}, status=status.HTTP_400_BAD_REQUEST)
+        except DecodeError:
+            return Response({'details': 'token is not valid.'}, status=status.HTTP_400_BAD_REQUEST)
+        # email = User.objects.get(pk=user_id).email
+        user_obj = User.objects.get(pk=user_id)
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            user_obj.set_password(serializer.data.get("new_password"))
+            user_obj.save()
+            return Response({'details': 'password changed successfully.'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+   
