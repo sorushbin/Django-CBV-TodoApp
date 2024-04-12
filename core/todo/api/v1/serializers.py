@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from ...models import Task
-from accounts.models import User
+from accounts.models import Profile
 
 
 class TodoSerializer(serializers.ModelSerializer):
@@ -18,8 +18,8 @@ class TodoSerializer(serializers.ModelSerializer):
         read_only_fields = ["user"]
 
     def create(self, validated_data):
-        validated_data["user"] = User.objects.get(
-            email=self.context.get("request").user.email
+        validated_data["user"] = Profile.objects.get(
+            user=self.context.get("request").user.id
         )
         return super().create(validated_data)
 
