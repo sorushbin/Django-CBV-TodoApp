@@ -1,10 +1,12 @@
 from django.db import models
 from .user import User
 
+
 class Profile(models.Model):
     """
     this is model for profile information of user
     """
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
