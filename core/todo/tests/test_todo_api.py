@@ -19,6 +19,11 @@ def user():
 
 @pytest.fixture
 def profile(user):
+    # Check if a profile already exists for the user
+    existing_profile = Profile.objects.filter(user=user).first()
+    if existing_profile:
+        return existing_profile
+    # If no profile exists, create a new one
     return Profile.objects.create(
         user=user,
         first_name="mahmoud",
