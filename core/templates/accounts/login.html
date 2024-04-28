@@ -9,7 +9,7 @@
     {% endfor %}
 </ul>
 {% endif %}
-                    <form method="post" action="{% url 'login' %}">
+                    <form method="post" action="{% url 'accounts:login' %}">
                       {% csrf_token %}
                       <input type="text" name="username" class="form-control form-control-lg login-control-top"
                         placeholder="Enter your Email" required>
@@ -17,7 +17,7 @@
                         placeholder="Enter your Password" required>
                       <button type="submit" class="btn btn-primary btn-login">Login</button>
                     </form>
-                    <p class="text-login">If don't have an account, please<a href="{% url 'register' %}" class="link-login">signup</a></p>
+                    <p class="text-login">If don't have an account, please<a href="{% url 'accounts:register' %}" class="link-login">signup</a></p>
                   </div>
                 </div>
               </div>
