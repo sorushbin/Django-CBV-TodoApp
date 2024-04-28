@@ -171,8 +171,8 @@ EMAIL_HOST_PASSWORD = ""
 # celery configs
 CELERY_BROKER_URL = "redis://redis:6379/1"
 CELERY_BEAT_SCHEDULE = {
-    'delete_done_tasks': {
-        'task': 'todo.tasks.deleteTask',
-        'schedule': 10,
+    "delete_done_tasks": {
+        "task": "todo.tasks.deleteTask",
+        "schedule": 10,
     },
 }
