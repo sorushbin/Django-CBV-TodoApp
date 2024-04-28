@@ -3,7 +3,7 @@
 
 {% block content %}
 
-                    <form method="post" action="{% url 'register' %}">
+                    <form method="post" action="{% url 'accounts:register' %}">
                       {% csrf_token %}
                       <input type="text" name="email" class="form-control form-control-lg login-control-top"
                         placeholder="Enter your Email" required>
@@ -13,7 +13,7 @@
                         placeholder="Confirm your Password" required>
                       <button type="submit" class="btn btn-primary btn-login">Sign Up</button>
                     </form>
-                    <p class="text-login">If you have an account, please<a href="{% url 'login' %}" class="link-login">Login</a></p>
+                    <p class="text-login">If you have an account, please<a href="{% url 'accounts:login' %}" class="link-login">Login</a></p>
                   </div>
                 </div>
               </div>

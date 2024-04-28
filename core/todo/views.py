@@ -6,7 +6,7 @@ from .models import Task
 from accounts.models import Profile
 from .forms import TaskEditForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from .tasks import deleteTask
 
 class TaskListView(LoginRequiredMixin, ListView):
     model = Task
@@ -49,3 +49,6 @@ class TaskDoneView(LoginRequiredMixin, ListView):
         task.done = True
         task.save()
         return redirect(self.success_url)
+
+
+
