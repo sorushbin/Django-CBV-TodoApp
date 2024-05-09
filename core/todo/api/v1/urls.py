@@ -11,5 +11,4 @@ router.register("task", views.TaskModelViewSet, basename="task")
 urlpatterns = [
     path("", include(router.urls)),
     path("weather/<str:city_name>", views.WeatherApiView.as_view(), name="weather"),
-
 ]

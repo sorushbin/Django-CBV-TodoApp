@@ -11,31 +11,31 @@ from .models import Task
 from .forms import TaskEditForm
 
 
-
-
-
 class WeatherMixin:
-    @method_decorator(cache_page(20*60))
+    @method_decorator(cache_page(20 * 60))
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
-    
+
     def get_weather_data(self):
         city_name = "tehran"
         url = f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid=e1176c2224faec7d17373814500b2fa7"
         response = requests.get(url)
-        weather_data =  response.json()
-        if 'main' in weather_data and 'temp' in weather_data['main']:
-            weather_data['main']['temp_celsius'] = int(weather_data['main']['temp'] - 273.15)
+        weather_data = response.json()
+        if "main" in weather_data and "temp" in weather_data["main"]:
+            weather_data["main"]["temp_celsius"] = int(
+                weather_data["main"]["temp"] - 273.15
+            )
         return weather_data
+
 
 class TaskBaseView(WeatherMixin):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['weather'] = self.get_weather_data()
+        context["weather"] = self.get_weather_data()
         return context
 
 
-class TaskListView(LoginRequiredMixin,TaskBaseView, ListView):
+class TaskListView(LoginRequiredMixin, TaskBaseView, ListView):
     model = Task
     context_object_name = "tasks"
     template_name = "todo/task_list.html"
@@ -44,7 +44,7 @@ class TaskListView(LoginRequiredMixin,TaskBaseView, ListView):
         return self.model.objects.filter(user=self.request.user.id)
 
 
-class TaskCreateView(LoginRequiredMixin,TaskBaseView, CreateView):
+class TaskCreateView(LoginRequiredMixin, TaskBaseView, CreateView):
     model = Task
     fields = ["title"]
     success_url = reverse_lazy("todo:task-list")
@@ -54,20 +54,20 @@ class TaskCreateView(LoginRequiredMixin,TaskBaseView, CreateView):
         return super(TaskCreateView, self).form_valid(form)
 
 
-class TaskEditView(LoginRequiredMixin,TaskBaseView, UpdateView):
+class TaskEditView(LoginRequiredMixin, TaskBaseView, UpdateView):
     model = Task
     form_class = TaskEditForm
     template_name = "todo/edit_task.html"
     success_url = reverse_lazy("todo:task-list")
 
 
-class TaskDeleteView(LoginRequiredMixin,TaskBaseView, DeleteView):
+class TaskDeleteView(LoginRequiredMixin, TaskBaseView, DeleteView):
     model = Task
     context_object_name = "task"
     success_url = reverse_lazy("todo:task-list")
 
 
-class TaskDoneView(LoginRequiredMixin,TaskBaseView, ListView):
+class TaskDoneView(LoginRequiredMixin, TaskBaseView, ListView):
     model = Task
     success_url = reverse_lazy("todo:task-list")
 
