@@ -20,8 +20,8 @@ class TaskModelViewSet(viewsets.ModelViewSet):
 
 
 class WeatherApiView(APIView):
-    @method_decorator(cache_page(20*60))
-    def get(self, request,*args, **kwargs ):
+    @method_decorator(cache_page(20 * 60))
+    def get(self, request, *args, **kwargs):
         city_name = kwargs.get("city_name")
         url = f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid=e1176c2224faec7d17373814500b2fa7"
         response = requests.get(url)
