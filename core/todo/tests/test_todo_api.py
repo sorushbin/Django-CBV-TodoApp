@@ -117,5 +117,3 @@ class TestTodoApi:
         assert updated_task.title == updated_data["title"]
         assert updated_task.description == updated_data["description"]
         assert updated_task.done == updated_data["done"]
-
-
