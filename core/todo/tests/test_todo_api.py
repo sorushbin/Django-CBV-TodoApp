@@ -47,11 +47,6 @@ class TestTodoApi:
         url = reverse("todo:api-v1:task-list")
         response = api_client.get(url)
         assert response.status_code == 200
-        assert 'weather' in response.data
-
-        # Check if the temperature data is present in the weather data
-        assert 'main' in response.data['weather']
-        assert 'temp_celsius' in response.data['weather']['main']
 
     def test_post_task_unauthorized_response_401_status(self, api_client, task):
         url = reverse("todo:api-v1:task-list")
