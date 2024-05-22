@@ -21,7 +21,7 @@ class CustomRegisterView(SuccessMessageMixin, FormView):
     template_name = "accounts/register.html"
     redirect_authenticated_user = True
     form_class = RegisterForm
-    success_url = reverse_lazy("login")
+    success_url = reverse_lazy("accounts:login")
     success_message = "Your account was created successfully.Please Login."
 
     def form_valid(self, form):

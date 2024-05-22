@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-from decouple import config
+from decouple import config, Csv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +28,10 @@ SECRET_KEY = config("SECRET_KEY", default="tests")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", cast=bool, default=True)
 
-ALLOWED_HOSTS = []
+if DEBUG:
+    ALLOWED_HOSTS = []
+else:
+    ALLOWED_HOSTS = config("ALLOWED_HOSTS" , default = ["127.0.0.1", "localhost"], cast = Csv())
 
 
 # Application definition
@@ -84,11 +87,22 @@ WSGI_APPLICATION = "core.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
+if DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+else:
+    DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": config("SQL_ENGINE", default = "django.db.backends.sqlite3"),
+        "NAME": config("SQL_DATABASE", default = BASE_DIR / "db.sqlite3"),
+        "USER": config("SQL_USER", default = "user"),
+        "PASSWORD": config("SQL_PASSWORD", default ="password"),
+        "HOST": config("SQL_HOST", default ="localhost"),
+        "PORT": config("SQL_PORT", default ="5432"),
     }
 }
 
