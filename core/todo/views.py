@@ -3,32 +3,39 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.list import ListView
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 import requests
 from accounts.models import Profile
 from .models import Task
 from .forms import TaskEditForm
 
 
-class WeatherMixin:
-    @method_decorator(cache_page(20 * 60))
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+class TaskBaseView:
+    model = Task
 
     def get_weather_data(self):
         city_name = "tehran"
-        url = f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid=e1176c2224faec7d17373814500b2fa7"
-        response = requests.get(url)
-        weather_data = response.json()
-        if "main" in weather_data and "temp" in weather_data["main"]:
-            weather_data["main"]["temp_celsius"] = int(
-                weather_data["main"]["temp"] - 273.15
-            )
+        api_key = "e1176c2224faec7d17373814500b2fa7"
+        cache_key = f"weather_data_{city_name}"
+        weather_data = cache.get(cache_key)
+
+        if not weather_data:
+            url = f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key}"
+            try:
+                response = requests.get(url)
+                response.raise_for_status()
+                weather_data = response.json()
+                if "main" in weather_data and "temp" in weather_data["main"]:
+                    weather_data["main"]["temp_celsius"] = int(
+                        weather_data["main"]["temp"] - 273.15
+                    )
+                # Cache the weather data for 20 minutes
+                cache.set(cache_key, weather_data, 20 * 60)
+            except requests.RequestException:
+                weather_data = {"error": "Unable to fetch weather data"}
+
         return weather_data
 
-
-class TaskBaseView(WeatherMixin):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["weather"] = self.get_weather_data()
