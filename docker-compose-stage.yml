@@ -30,7 +30,7 @@ services:
     expose:
       - "8000"
     env_file:
-      - ./.env
+      - envs/stage/.env
     depends_on:
       - redis
       - postgres
