@@ -25,8 +25,8 @@ services:
     command: gunicorn core.wsgi --bind 0.0.0.0:8000
     volumes:
       - ./core:/usr/src/app
-      - static_volume:/app/static
-      - media_volume:/app/media
+      - static_volume:/usr/src/app/static
+      - media_volume:/usr/src/app/media
     expose:
       - "8000"
     env_file:
