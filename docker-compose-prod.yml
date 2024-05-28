@@ -22,7 +22,7 @@ services:
   backend:
     build: .
     container_name: todo_backend
-    command: gunicorn core.wsgi --bind 0.0.0.0:8000
+    command: python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic && gunicorn core.wsgi --bind 0.0.0.0:8000
     volumes:
       - ./core:/app
       - static_volume:/app/static
