@@ -11,20 +11,29 @@ services:
   
   postgres:
     container_name: postgres
-    image: postgres:12-alpine
+    image: postgres:alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=898898898Ms
       - POSTGRES_DB=todo_db
+    restart: always
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build: .
     container_name: todo_backend
-    command: python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic && gunicorn core.wsgi --bind 0.0.0.0:8000
+    command: sh -c "python3 manage.py check_database && \
+                    python3 manage.py makemigrations --noinput && \
+                    python3 manage.py migrate --noinput && \
+                    python3 manage.py collectstatic --noinput && \
+                    gunicorn --bind 0.0.0.0:8000 core.wsgi:application"
     volumes:
-      - ./core:/app
       - static_volume:/app/static
       - media_volume:/app/media
     expose:
