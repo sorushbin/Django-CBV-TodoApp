@@ -212,7 +212,7 @@ CACHES = {
 
 
 # security configs for production
-if config("USE_SSL_CONFIG", cast=bool, default=False):
+""" if config("USE_SSL_CONFIG", cast=bool, default=False):
     # Https settings
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
@@ -232,4 +232,4 @@ if config("USE_SSL_CONFIG", cast=bool, default=False):
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     CSRF_USE_SESSIONS = True
     CSRF_COOKIE_HTTPONLY = True
-    SESSION_COOKIE_SAMESITE = 'Strict'
+    SESSION_COOKIE_SAMESITE = 'Strict' """
