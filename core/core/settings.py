@@ -28,10 +28,7 @@ SECRET_KEY = config("SECRET_KEY", default="tests")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", cast=bool, default=True)
 
-if DEBUG:
-    ALLOWED_HOSTS = []
-else:
-    ALLOWED_HOSTS = config("ALLOWED_HOSTS" , default = ["127.0.0.1", "localhost"], cast = Csv())
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast = Csv(), default="*")
 
 
 # Application definition
@@ -97,11 +94,11 @@ if DEBUG:
 else:
     DATABASES = {
     "default": {
-        "ENGINE": config("SQL_ENGINE", default = "django.db.backends.sqlite3"),
-        "NAME": config("SQL_DATABASE", default = BASE_DIR / "db.sqlite3"),
-        "USER": config("SQL_USER", default = "user"),
-        "PASSWORD": config("SQL_PASSWORD", default ="password"),
-        "HOST": config("SQL_HOST", default ="localhost"),
+        "ENGINE": config("SQL_ENGINE", default = "django.db.backends.postgresql"),
+        "NAME": config("SQL_DATABASE", default = "postgres"),
+        "USER": config("SQL_USER", default = "postgres"),
+        "PASSWORD": config("SQL_PASSWORD", default ="postgres"),
+        "HOST": config("SQL_HOST", default ="db"),
         "PORT": config("SQL_PORT", default ="5432"),
     }
 }
@@ -173,13 +170,23 @@ REST_FRAMEWORK = {
 }
 
 # Email configuration
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp4dev"
-EMAIL_USE_TLS = False
-EMAIL_PORT = 25
-EMAIL_HOST_USER = ""
-EMAIL_HOST_PASSWORD = ""
+if DEBUG:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_USE_TLS = False
+    EMAIL_HOST = "smtp4dev"
+    EMAIL_HOST_USER = ""
+    EMAIL_HOST_PASSWORD = ""
+    EMAIL_PORT = 25
+else:
+    EMAIL_BACKEND = config("EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend")
+    EMAIL_HOST = config("EMAIL_HOST", default="mail.example.come")
+    EMAIL_HOST_PORT = config("EMAIL_HOST_PORT", cast=int, default=465)
+    EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="infor@example.com")
+    EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="password")
+    EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool, default=False)
+    EMAIL_USE_SSL = config("EMAIL_USE_SSL", cast=bool, default=True)
+    DEFAULT_FROM_EMAIL = config(
+        "DEFAULT_FROM_EMAIL", default="infor@example.com")
 
 
 # celery configs
@@ -202,3 +209,27 @@ CACHES = {
         },
     }
 }
+
+
+# security configs for production
+if config("USE_SSL_CONFIG", cast=bool, default=False):
+    # Https settings
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
+
+    # HSTS settings
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_PRELOAD = True
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+    # more security settings
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_BROWSER_XSS_FILTER = True
+    X_FRAME_OPTIONS = "SAMEORIGIN"
+    SECURE_REFERRER_POLICY = "strict-origin"
+    USE_X_FORWARDED_HOST = True
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    CSRF_USE_SESSIONS = True
+    CSRF_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = 'Strict'
