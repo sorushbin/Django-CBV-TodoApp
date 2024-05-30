@@ -1,4 +1,4 @@
-name: Django Todo Project Tests
+name: Django Todo Project Test and Deploy
 
 on:
   push:
@@ -20,7 +20,7 @@ jobs:
 
   Deploy:
     name: Deploy
-    run-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - name: Connect and Execute Commands
