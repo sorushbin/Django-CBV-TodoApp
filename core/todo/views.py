@@ -14,7 +14,7 @@ class TaskBaseView:
     model = Task
 
     def get_weather_data(self):
-        city_name = "tehran"
+        city_name = "mashhad"
         api_key = "e1176c2224faec7d17373814500b2fa7"
         cache_key = f"weather_data_{city_name}"
         weather_data = cache.get(cache_key)
